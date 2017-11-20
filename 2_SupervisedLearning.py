@@ -158,4 +158,92 @@ axis[0].legend(["Model predictions", "Training data/target", "Test data/target"]
 # グラフを見ると，nが増えるほどモデルはなめらかな正弦波に近づくが，
 # ランダム変動を吸収できないので，これくらいの精度に落ち着いてしまうのでは．
 
+# -----------------------------------------------------------
+# 線形モデル
+
+mg.plots.plot_linear_regression_wave()
+
+
+from sklearn.linear_model import LinearRegression
+
+# 訓練データセットに対して特徴量が少ない場合
+X, y = mg.datasets.make_wave(n_samples=100)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+X_train.shape
+X_test.shape
+y_train.shape
+y_test.shape
+
+lr = LinearRegression().fit(X_train, y_train)
+
+lr.score(X_train, y_train)
+lr.score(X_test, y_test)
+
+lr.coef_
+lr.intercept_
+
+# 訓練データセットに対して特徴量が多い場合
+X, y = mg.datasets.load_extended_boston()
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+X_train.shape
+X_test.shape
+y_train.shape
+y_test.shape
+
+lr = LinearRegression().fit(X_train, y_train)
+
+lr.score(X_train, y_train) #0.96(過剰適合)
+lr.score(X_test, y_test) #0.65
+
+lr.coef_
+lr.intercept_
+
+
+# リッジ回帰ではWが正則化されるので過剰適合を防げる
+from sklearn.linear_model import Ridge
+ridge = Ridge().fit(X_train, y_train)
+ridge.score(X_train, y_train) #0.88
+ridge.score(X_test, y_test) #0.75
+
+ridge10 = Ridge(alpha=10.0).fit(X_train, y_train)
+ridge10.score(X_train, y_train) # 0.78
+ridge10.score(X_test, y_test) #0.63 simpleになりすぎて，かえって性能低下した
+
+ridge01 = Ridge(alpha=.1).fit(X_train, y_train)
+ridge01.score(X_train, y_train) # 0.92 (過剰適合っぽいが)
+ridge01.score(X_test, y_test) # 0.77 (汎化性能も上がっている)
+
+plt.plot(ridge.coef_  , "s", label = "Ridge=1.0")
+plt.plot(ridge10.coef_, "^", label = "Ridge=10.0")
+plt.plot(ridge01.coef_, "v", label = "Ridge=0.10")
+plt.plot(lr.coef_, "o", label = "LinearRegression")
+
+plt.xlabel("Coefficient index")
+plt.ylabel("Coefficient magnitude")
+plt.hlines(0, 0, len(lr.coef_))
+plt.ylim(-25, 25)
+plt.legend()
+
+# 線形回帰やalpha0.1のリッジ回帰では重みがばらついているのに対し，
+# alphaが大きくなると，重みが0に近い値に正則化され，モデルがシンプルになっていることがわかる．
+
+# 今度は訓練データのサイズを変化させたとき，線形回帰とRidge(alpha=1)で学習曲線を比較する
+mg.plots.plot_ridge_n_samples()
+
+# 線形回帰ではテストデータが少ないとほとんどなにも学習できない
+# 十分な訓練データがある場合は，正則化はあまり重要ではない．
+
+# Lasso
+# リッジ回帰ではWが正則化されるので過剰適合を防げる
+from sklearn.linear_model import Lasso
+lasso = Lasso().fit(X_train, y_train)
+lasso.score(X_train, y_train) # 0.29
+lasso.score(X_test, y_test) # 0.20
+np.sum(lasso.coef_ == 0) # 100 の特徴量が捨てられ
+np.sum(lasso.coef_ != 0) # 4 つの特徴量だけが使われる
+
+
+
 # --------------------------
