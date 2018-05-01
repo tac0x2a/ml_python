@@ -1,11 +1,20 @@
-# 「Pythonで始める機械学習」のメモ
+#「Pythonで始める機械学習」のメモ
 
 書籍が提供しているデータセット等便利パッケージ
 ```
 pip install mglearn
 ```
 
+------------------------------------------------------------------------------
 ## 1章 はじめに
+### 使用されるライブラリ等
++ `scikit-learn` : 機械学習アルゴリズムライブラリ．[ユーザガイド](http://scikit-learn.org/stable/user_guide.html)がある．
++ `Jupyter Notebook`: ブラウザでコードをインタラクティブに実行する環境．
++ `NumPy`: 科学技術計算ライブラリ．線形代数，擬似乱数生成器など．`scikit-learn`の基本データ構造であるNumPy配列(`ndarray`)を含む．
++ `SciPy`: 科学技術計算の関数群．`scikit-learn`でこれらの関数群を使用している．疎行列を表現する`scipi.sparse`を含む．
++ `matplotlib`: グラフ描画ライブラリ．
++ `pandas`: テーブル形式のデータ構造(DataFrame)のライブラリ．このテーブルにはクエリもできる．
+
 ### `1.7_iris_sample.py`
 アイリスという花の分類をk-近傍法で行うサンプル．
 
@@ -15,6 +24,8 @@ pip install mglearn
 + k-近傍法: `from sklearn.neighbors import KNeighborsClassifier`
 + `scikit-learn`の教師あり学習では共通して，モデル構築:`fit`, 分類:`predict`, 評価:`score`が提供されている
 
+
+------------------------------------------------------------------------------
 ## 2章 教師あり学習
 + クラス分類: ラベルの予測．選択肢の中からクラスラベルを予測すること
 + 回帰: 連続値の予測．量を予測する．
@@ -108,7 +119,8 @@ Ridgeとの違いは，いくつかの重みは完全に0になるため，特�
 + `LogisticRegression(penalty="l1")`として，どのようなペナルティ(ルール)で正則化するか指定できる
 
 
-### その他
+------------------------------------------------------------------------------
+## その他
 + Jupyter Notebook を Atom で動かす Hydrogen がとても便利．
 + [matplotlibの基本的な使い方](https://qiita.com/Morio/items/d75159bac916174e7654)
 
@@ -161,3 +173,6 @@ Ridgeとの違いは，いくつかの重みは完全に0になるため，特�
   # 最初のグラフにだけレジェンドを表示する．plotした後じゃないとだめなのでここで．
   axis[0].legend(["Model predictions", "Training data/target", "Test data/target"], loc="best")
   ```
+
+### 用語とか
++ `COO(Coodinate)-format` : 0成分を省略したフォーマット．メモリ効率が良い．
