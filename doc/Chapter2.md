@@ -147,7 +147,7 @@ Lasso().fit(X_train, y_train).score(X_test, y_test)
 どの分類器でもそれ以外に分類される領域については，クラス分類式の値が一番大きいクラス(つまりその点に最も近い線を持つクラス)に分類される．
 
 
-### `2_SupervisedLearning.py`
+### [`2_SupervisedLearning.py`](../src/2_SupervisedLearning.py)
 + `plt.scatter` で散布図を表示
 + `np.bincount(cancer.target)` で，値(ラベル)ごとに集計したndarrayを返す
 + 複数の線を同じ表に表示したければ，`plt.plot` を複数回コールする

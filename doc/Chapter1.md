@@ -7,7 +7,7 @@
 + `matplotlib`: グラフ描画ライブラリ．
 + `pandas`: テーブル形式のデータ構造(DataFrame)のライブラリ．このテーブルにはクエリもできる．
 
-### `1.7_iris_sample.py`
+### [`1.7_iris_sample.py`](../src/1.7_iris_sample.py)
 アイリスという花の分類をk-近傍法で行うサンプル．
 
 + データセットの読み込み(ndarray)
