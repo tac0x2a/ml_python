@@ -116,8 +116,9 @@ X_test.shape
 
 plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, marker='o')
 
+import pandas as pd
 cancer_df = pd.DataFrame(X_train, columns=cancer.feature_names)
-grr = pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, s=60, alpha=.8)
+pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, s=60, alpha=.8)
 
 # n=1から100を試して，精度を比較する
 r = range(1,100)
@@ -364,6 +365,26 @@ for coef, intercept, color in zip(linear_svc.coef_, linear_svc.intercept_, ['b',
 plt.xlabel("Feature 0")
 plt.ylabel("Feature 1")
 plt.legend(['Class 0', 'Class 1', 'Class 2', 'Line class 0', 'Line class 1', 'Line class 2'], loc=(1.01, 0.3))
+
+
+# ----------------------------------------------------
+# 決定木
+
+from sklearn.tree import DecisionTreeClassifier
+
+from sklearn.datasets import load_breast_cancer
+cancer = load_breast_cancer()
+X, y = cancer.data, cancer.target
+
+plt.scatter(X[:,0], X[:,1], c=y)
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target, random_state=0)
+DecisionTreeClassifier(random_state=42).fit(X_train, y_train).score(X_test, y_test)
+
+
+
+
 
 
 # EOB
