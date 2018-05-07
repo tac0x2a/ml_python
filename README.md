@@ -20,6 +20,30 @@ pip install mglearn
   pd.scatter_matrix(dataframe, c=y, figsize=(16,16), hist_kwds={'bins':40}, s=10, alpha=.8)
   ```
 
+### よく使うコード
+#### `scikit-learn` が提供するデータセット
+```py
+# 例
+from sklearn.datasets import load_breast_cancer
+cancer = load_breast_cancer()
+X, y = cancer.data, cancer.target
+```
+
+#### データセットの分割
+```py
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target, random_state=42)
+```
+
+#### 相関行列の表示
+```py
+import pandas as pd
+cancer_df = pd.DataFrame(X_train, columns=cancer.feature_names)
+pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, s=60, alpha=.8)
+```
+
+
+
 ### matplotlib.pyplotのメモ
 + `plt.ylim(-25, 25)` : y軸の表示範囲を制限する
 + `plt.hlines(8, 10, 42)` : y=8の傾き0の水平線を, x=10からx=42まで引く
