@@ -408,6 +408,27 @@ def plot_features_importances(model, dataset):
 plot_features_importances(tree, cancer)
 
 
+# ランダムフォレスト
+from sklearn.datasets import make_moons
+X, y = make_moons(n_samples=100, noise=0.25, random_state=3)
+
+plt.scatter(X[:,0], X[:,1], c=y)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+from sklearn.ensemble import RandomForestClassifier
+random_forest = RandomForestClassifier(n_estimators=32, random_state=2).fit(X_train, y_train)
+random_forest.score(X_test, y_test)
+
+# visualize trees in RandomForest
+fig, axes = plt.subplots(2, 3, figsize=(14, 10))
+for i, (ax, tree) in enumerate(zip(axes.ravel(), random_forest.estimators_)):
+  ax.set_title("Tree {}".format(i))
+  mg.plots.plot_tree_partition(X_train, y_train, tree, ax=ax)
+mg.plots.plot_2d_separator(random_forest, X_train, fill=True, ax=axes[-1, -1], alpha=.4)
+axes[-1, -1].set_title("Random Forest")
+mg.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train)
+
 
 
 

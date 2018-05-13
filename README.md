@@ -21,6 +21,15 @@ pip install mglearn
   ```
 
 ### よく使うコード
+#### import
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# import mglearn as mg
+```
+
 #### `scikit-learn` が提供するデータセット
 ```py
 # 例
@@ -96,3 +105,4 @@ pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, 
 
 ### 用語とか
 + `COO(Coodinate)-format` : 0成分を省略したフォーマット．メモリ効率が良い．
++ アンサンブル法: 複数の機械学習モデルを組み合わせること．ランダムフォレストと勾配ブースティング決定木がよく知られている．
