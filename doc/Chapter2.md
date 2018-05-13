@@ -128,7 +128,7 @@ Lasso().fit(X_train, y_train).score(X_test, y_test)
   from sklearn.linear_model import LogisticRegression
   LogisticRegression(C=1.0, penalty='l2').fit(X_train, y_train).score(X_test, y_test)
   ```
-
+b
 + 線形サポートベクタマシン(linear SVM) : `クラス分類`
   ```py
   from sklearn.svm import LinearSVC
@@ -162,7 +162,7 @@ Lasso().fit(X_train, y_train).score(X_test, y_test)
 
 
 ------------------------------------------------------------------------------
-### 決定木
+### 決定木(DecisionTree)
 
 ```py
 from sklearn.tree import DecisionTreeClassifier
@@ -170,25 +170,57 @@ DecisionTreeClassifier().fit(X_train, y_train).score(X_test, y_test)
 ```
 
 2分木，節が述語(機械学習では`テスト`というらしい)で葉がクラス．
+クラス分類と回帰の両方で使える．(クラス分類決定木, 回帰決定木)
+
+過剰適合しやすく汎化性能が低い傾向があるため，アンサンブル法が用いられる場合が多い．
 
 決定木を構築する際，目的変数(`y`)に対して情報量の多いテストから順にルートから配置する．
 分割後の領域も再帰的に分割し，領域に単一クラス(または回帰値)のみが含まれるまで分割する．
 単一データポイントのみ含むような決定木の葉を`純粋`という．
 
 クラス分類の場合は，ルートから順にテストで分岐して葉までたどれば良い．
-回帰の場合，同様に葉まで辿って，その葉に属する訓練データの平均値を予測値とする．
+
+回帰決定木による予測では，同様に葉まで辿って，その葉に属する訓練データの平均値を予測値とする．
+そのため，**訓練データの範囲を超えた予測(外挿(extrapolate))をすることはできない**ことに注意.
 
 複雑さを抑制する方法として以下の2つがある．
-+ 事前枝刈り: 構築中に生成を止める(木の深さを制限，葉の大きさを制限)
-+ 事後枝刈り: 木を作ってから上方の少ないノードを削除する
++ 事前枝刈り: 構築中に生成を止める(木の深さを制限(`max_depth=4`)，葉の大きさを制限)
++ 事後枝刈り: 木を作ってから情報の少ないノードを削除する
 
 scikit-learnでは事前枝刈りしか実装されていない．
 
 
+木をgraphvizで表示する
+```py
+from sklearn.tree import export_graphviz
+export_graphviz(tree, out_file="tree.dot", class_names=["malignant", "benign"], feature_names=cancer.feature_names, impurity=False, filled=True)
+
+# pip install grahviz
+# brew install graphviz
+import graphviz
+with open(tree_file) as f:
+  dot_graph = f.read()
+graphviz.Source(dot_graph)
+```
+
+決定木を可視化すると予測過程を説明しやすい．
 
 
+##### 特徴量の重要度(feature importance)
+```py
+tree.feature_importances_
+```
+このモデル(木)において，合計が1になるようにした，各特徴量に対する重要度の重み．分類にどの程度寄与しているかを示す．
+値が小さいからといって，その特徴量が重要ではない，というわけではない．単にこのモデルで採用されなかっただけ．また，他の特徴量にエンコードされている場合もあるので注意．
 
+##### 主なパラメータと特徴
++ 事前枝刈りパラメータ．以下のいずれかで制限すれば十分．
+  + `max_depth`: 木の深さ
+  + `max_leaf_nodes`:
+  + `min_samples_leaf`
 
++ Good: モデルの可視化が容易であり，特徴量の正規化や標準化が不要で2値と連続値が混在していてもOK
++ Bad: 過剰適合しやすく汎化性能も低い傾向がある．
 
 
 ------------------------------------------------------------------------------
@@ -207,5 +239,7 @@ scikit-learnでは事前枝刈りしか実装されていない．
 + `scikit-learn`では，訓練データから得られた属性には全て，末尾にアンダースコアをつける習慣がある．(`coef_`, `intercept_` など)
 + `LogisticRegression(penalty="l1")`として，どのようなペナルティ(ルール)で正則化するか指定できる
 
++ `export_graphviz` でtreeを可視化できる
++
 
 ------------------------------------------------------------------------------

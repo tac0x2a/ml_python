@@ -380,7 +380,51 @@ plt.scatter(X[:,0], X[:,1], c=y)
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target, random_state=0)
-DecisionTreeClassifier(random_state=42).fit(X_train, y_train).score(X_test, y_test)
+tree = DecisionTreeClassifier(random_state=42).fit(X_train, y_train)
+tree.score(X_test, y_test)
+
+
+# graphvizで書き出す
+tree_file = "tree.dot"
+from sklearn.tree import export_graphviz
+export_graphviz(tree, out_file=tree_file, class_names=["malignant", "benign"], feature_names=cancer.feature_names, impurity=False, filled=True)
+
+# pip install grahviz
+# brew install graphviz
+import graphviz
+with open(tree_file) as f:
+  dot_graph = f.read()
+graphviz.Source(dot_graph)
+
+# 特徴量の重要度(feature importance)
+tree.feature_importances_
+
+def plot_features_importances(model, dataset):
+    importances = model.feature_importances_
+    n_features = dataset.data.shape[1]
+    plt.barh(range(n_features), importances, align='center')
+    plt.yticks(np.arange(n_features), dataset.feature_names)
+    plt.xlabel("model.feature_importances_")
+plot_features_importances(tree, cancer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
