@@ -430,6 +430,18 @@ axes[-1, -1].set_title("Random Forest")
 mg.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train)
 
 
+# 勾配ブースティング回帰木
+from sklearn.datasets import make_moons
+X, y = make_moons(n_samples=100, noise=0.25, random_state=3)
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+plt.scatter(X[:,0], X[:,1], c=y)
+
+from sklearn.ensemble import GradientBoostingClassifier
+GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train).score(X_train, y_train)
+GradientBoostingClassifier().fit(X_train, y_train).score(X_test, y_test)
 
 
 
