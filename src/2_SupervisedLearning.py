@@ -1,29 +1,30 @@
+#%%
 import numpy as np
 import matplotlib.pyplot as plt
 %matplotlib inline
 
 import mglearn as mg
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # クラス分類のサンプルデータ
 X, y = mg.datasets.make_forge()
 X.shape
 y.shape
 X
-# 散布図をプロット
+#%% 散布図をプロット
 mg.discrete_scatter(X[:, 0], X[:, 1], y )
 plt.legend(["Class 0", "Class 1"], loc=4)
 plt.xlabel("First feature")
 plt.ylabel("Second feature")
 
-# mg.discrete_scatterを使わずにやろうと思うと・・・
+#%% mg.discrete_scatterを使わずにやろうと思うと・・・
 plt.scatter(X[:, 0], X[:, 1], c=y, marker='o')
 plt.legend(["Class 0", "Class 1"], loc=4)
 plt.xlabel("First feature")
 plt.ylabel("Second feature")
 
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # 回帰のサンプルデータ(waveデータセット)
 X, y = mg.datasets.make_wave(n_samples=128)
 X.shape
@@ -34,28 +35,26 @@ plt.xlabel("Feature")
 plt.ylabel("Target")
 
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # 特徴量の多いデータのサンプルとして 乳がんデータセットを見てみる
 from sklearn.datasets import load_breast_cancer
 cancer = load_breast_cancer()
 cancer.keys()
-# print(cancer.DESCR)
+print(cancer.DESCR)
 
-# データの確認
+#%% データの確認
 cancer.data.shape #(569,30)
 cancer.target.shape # (569,)
 # np.bincount(cancer.target) # 値ごとに集計したndarrayを返す
 
 cancer.feature_names
 
- #良性/悪性のカウント
+# 良性/悪性のカウント
 {n: c for n,c in zip(cancer.target_names, np.bincount(cancer.target))}
 
 # さらに特徴量を交互作用(interaction)で拡張してみる
-#
 
-
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # forgeのデータセットに対して k-最近傍法でクラス分類してみる
 X, y = mg.datasets.make_forge()
 
@@ -103,7 +102,7 @@ axis[0].legend(loc=3)
 # 近傍点を全てのテストデータポイント(len(X[:])=26)にすると，
 # 全ての点について最も多いクラスのになる．
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # cancerのデータセットに対して k-最近傍法でクラス分類してみる
 from sklearn.datasets import load_breast_cancer
 cancer = load_breast_cancer()
@@ -139,7 +138,7 @@ plt.legend() # plotで設定したlabelを表示する
 # nが小さいほど，出来上がるモデルは複雑になる．
 # nがサンプル数と等しい場合が最も単純であると考える．
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # waveデータでn-近傍回帰してみる
 mg.plots.plot_knn_regression(n_neighbors=3)
 
@@ -209,7 +208,7 @@ plt.plot([1,3,9,15,30], training_accuracy, label="training_accuracy")
 plt.plot([1,3,9,15,30], test_accuracy, label="test_accuracy")
 plt.legend() # plotで設定したlabelを表示する
 
-# -----------------------------------------------------------
+#%% -----------------------------------------------------------
 # 線形モデル
 
 mg.plots.plot_linear_regression_wave()
@@ -307,7 +306,7 @@ plt.legend()
 
 
 
-# ----------------------------------------------------
+#%% ----------------------------------------------------
 # 線形クラス分類
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm          import LinearSVC
@@ -339,7 +338,7 @@ LinearSVC(C=c).fit(X_train, y_train).score(X_test, y_test)
 LinearSVC(C=c).fit(X_train, y_train).score(X_train, y_train)
 
 
-# ----------------------------------------------------
+#%% ----------------------------------------------------
 # 多クラス分類
 from sklearn.datasets import make_blobs
 X,y = make_blobs(random_state=40)
@@ -367,7 +366,7 @@ plt.ylabel("Feature 1")
 plt.legend(['Class 0', 'Class 1', 'Class 2', 'Line class 0', 'Line class 1', 'Line class 2'], loc=(1.01, 0.3))
 
 
-# ----------------------------------------------------
+#%% ----------------------------------------------------
 # 決定木
 
 from sklearn.tree import DecisionTreeClassifier
@@ -384,7 +383,7 @@ tree = DecisionTreeClassifier(random_state=42).fit(X_train, y_train)
 tree.score(X_test, y_test)
 
 
-# graphvizで書き出す
+#%% graphvizで書き出す
 tree_file = "tree.dot"
 from sklearn.tree import export_graphviz
 export_graphviz(tree, out_file=tree_file, class_names=["malignant", "benign"], feature_names=cancer.feature_names, impurity=False, filled=True)
@@ -396,7 +395,7 @@ with open(tree_file) as f:
   dot_graph = f.read()
 graphviz.Source(dot_graph)
 
-# 特徴量の重要度(feature importance)
+#%% 特徴量の重要度(feature importance)
 tree.feature_importances_
 
 def plot_features_importances(model, dataset):
@@ -408,7 +407,7 @@ def plot_features_importances(model, dataset):
 plot_features_importances(tree, cancer)
 
 
-# ランダムフォレスト
+#%% ランダムフォレスト
 from sklearn.datasets import make_moons
 X, y = make_moons(n_samples=100, noise=0.25, random_state=3)
 
@@ -420,7 +419,7 @@ from sklearn.ensemble import RandomForestClassifier
 random_forest = RandomForestClassifier(n_estimators=32, random_state=2).fit(X_train, y_train)
 random_forest.score(X_test, y_test)
 
-# visualize trees in RandomForest
+#%% visualize trees in RandomForest
 fig, axes = plt.subplots(2, 3, figsize=(14, 10))
 for i, (ax, tree) in enumerate(zip(axes.ravel(), random_forest.estimators_)):
   ax.set_title("Tree {}".format(i))
@@ -430,7 +429,7 @@ axes[-1, -1].set_title("Random Forest")
 mg.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train)
 
 
-# 勾配ブースティング回帰木
+#%% 勾配ブースティング回帰木
 from sklearn.datasets import make_moons
 X, y = make_moons(n_samples=100, noise=0.25, random_state=3)
 
@@ -442,26 +441,6 @@ plt.scatter(X[:,0], X[:,1], c=y)
 from sklearn.ensemble import GradientBoostingClassifier
 GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train).score(X_train, y_train)
 GradientBoostingClassifier().fit(X_train, y_train).score(X_test, y_test)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # EOB
