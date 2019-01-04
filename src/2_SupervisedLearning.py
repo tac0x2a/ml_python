@@ -439,8 +439,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 plt.scatter(X[:,0], X[:,1], c=y)
 
 from sklearn.ensemble import GradientBoostingClassifier
-GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train).score(X_train, y_train)
-GradientBoostingClassifier().fit(X_train, y_train).score(X_test, y_test)
+tree = GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train)
+tree.score(X_test, y_test)
 
+#%% Cancerデータでやってみる
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target)
 
-# EOB
+from sklearn.ensemble import GradientBoostingClassifier
+tree = GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train)
+print("score:{}".format(tree.score(X_test, y_test)))
+
+plot_features_importances(tree, cancer)
+
+#%%
+

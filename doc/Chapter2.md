@@ -274,6 +274,11 @@ RandomForestClassifier().fit(X_train, y_train).score(X_test, y_test)
 
 ------------------------------------------------------------------------------
 ### 勾配ブースティング回帰木(勾配ブースティングマシン):`クラス分類`, `回帰`
+```py
+from sklearn.ensemble import GradientBoostingClassifier
+GradientBoostingClassifier(learning_rate=0.05).fit(X_train, y_train).score(X_test, y_test)
+```
+
 複数の決定木を用いるアンサンブル法のひとつ．ランダムフォレストとは対象的に，1つ前の木の誤りを修正するように順番に木をつくる．
 デフォルトでは乱数性はない．強力な事前枝刈り(深さが高々5程度になる)により，メモリ効率が良く，予測も高速．
 このように浅い決定木=簡単なモデル(弱学習器)を多数組み合わせるのが勾配ブースティング回帰木の特徴．
@@ -288,7 +293,7 @@ RandomForestClassifier().fit(X_train, y_train).score(X_test, y_test)
 ##### 主なパラメータと特徴
 + `learning_rate`: 学習率．次の決定木を作る際，それ以前の決定木の誤りをどれくらい強く補正しようとするか．大きいほど強く補正し，モデルは複雑になる．
 + `n_estimators`: 木の本数．
-+ `max_depth`, `max_leaf_nodes`: 木の深さ, 葉の数．
++ `max_depth`, `max_leaf_nodes`: 木の深さ, 葉の数．一般に5以上にすることはあまりない．
 
 デフォルトは深さ3の木が学習率0.1で100本作られる．
 
@@ -298,6 +303,8 @@ RandomForestClassifier().fit(X_train, y_train).score(X_test, y_test)
 
 教師あり学習の中でも最も強力で広く使われているが，パラメータチューニングが難しく，訓練の時間が長い．
 またテキストデータなど高次元で疎なデータに対してはうまく機能せず，線形モデルの方が適している．
+
+
 
 
 ------------------------------------------------------------------------------
