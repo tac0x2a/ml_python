@@ -495,20 +495,21 @@ ax.set_zlabel("f1**2")
 from sklearn.svm import SVC
 X, y = mg.tools.make_handcrafted_dataset()
 
-svm = SVC(kernel='rbf', C=10, gamma=.1).fit(X, y)  # Radial Basis Function =~ ガウシアンカーネル
+# Radial Basis Function =~ ガウシアンカーネル
+svm = SVC(kernel='rbf', C=10, gamma=.1).fit(X, y)
 svm.score(X, y)
 
 #%% プロットする
 mg.plots.plot_2d_separator(svm, X)
 mg.discrete_scatter(X[:, 0], X[:, 1], y)
 
-sv = svm.support_vectors_ # サポートベクタ: クラス境界付近の，境界を決定するデータポイント
+sv = svm.support_vectors_  # サポートベクタ: クラス境界付近の，境界を決定するデータポイント
 sv_labels = svm.dual_coef_.ravel() > 0
 
 mg.discrete_scatter(sv[:, 0], sv[:, 1], sv_labels, s=15, markeredgewidth=3)
 
 
-#%% 各特徴量を正規化しない場合
+#%% 各特徴量を正規化しない場合
 from sklearn.datasets import load_breast_cancer
 cancer = load_breast_cancer()
 
@@ -516,7 +517,7 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target)
 
 svc = SVC().fit(X_train, y_train)
-print('OriginalData Score: {}'.format(svc.score(X_test, y_test))) # 0.629
+print('OriginalData Score: {}'.format(svc.score(X_test, y_test)))  # 0.629
 
 #%% MinMaxScalerの代わりに手動で正規化した場合
 min = X_train.min(axis=0)
@@ -525,6 +526,31 @@ range = X_train.max(axis=0) - min
 X_train_scaled = (X_train - min) / range
 X_test_scaled = (X_test - min) / range
 svc_scaled = SVC().fit(X_train_scaled, y_train)
-print('Normalized Score: {}'.format(svc_scaled.score(X_test_scaled, y_test))) # 0.937
+print('Normalized Score: {}'.format(
+    svc_scaled.score(X_test_scaled, y_test)))  # 0.937
+
+#%% ニューラルネットワークモデル ----------------------------------------------------
+
+line = np.linspace(-3, 3, 100)
+plt.plot(line, np.tanh(line), label="tanh")
+plt.plot(line, np.maximum(line, 0), label="relu")
+plt.legend(loc="best")
+plt.xlabel("x")
+plt.ylabel("relu(x), tanh(x)")
+
+#%% MLPClassifier
+from sklearn.datasets import make_moons
+X, y = make_moons(n_samples=100, noise=0.25, random_state=42)
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+from sklearn.neural_network import MLPClassifier
+mlp = MLPClassifier(solver='lbfgs', random_state=42,
+                    hidden_layer_sizes=[100, 100])
+model = mlp.fit(X_train, y_train)
+model.score(X_test, y_test)
 
 #%%
+mg.plots.plot_2d_separator(model, X_train, fill=True, alpha=.25)
+mg.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train)
