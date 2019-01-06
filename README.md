@@ -63,6 +63,64 @@ cancer_df = pd.DataFrame(X_train, columns=cancer.feature_names)
 pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, s=60, alpha=.8)
 ```
 
+### matplotlib
+
+`figure` の上に `plot`が複数乗る感じ．
+
+
++ `figure`を2つ用意する場合
+
+  ```py
+  # figure 1 つ目
+  plt.figure(figsize=(3, 2))
+  # 1つしか置かないのでsubplotは不要
+  plt.plot(x, y1)
+
+  # figure 2 つ目
+  plt.figure(figsize=(3, 2))
+  # 1つしか置かないのでsubplotは不要
+  plt.plot(x, y2)
+  ```
+
+  ![](doc/img/plot_ex01-1.png) ![](doc/img/plot_ex01-2.png)
+
+  画像は`figure`ごとに出力される．
+
++ `figure`1つに`plot`2つが乗る場合
+  ```py
+  plt.figure(figsize=(6, 2)) # figureの縦横の大きさ
+
+  # subplot(行の数,列の数,何番目に配置しているか)
+  plt.subplot(1,2,1) # 1行2列のレイアウトとしたときの1番目
+  plt.plot(x, y1)
+
+  plt.subplot(1,2,2) # 1行2列のレイアウトとしたときの2番目
+  plt.plot(x, y2)
+  ```
+
+  ![](doc/img/plot_ex02.png)
+
++ `figure`1つのうえに4つ`plot`する(`ax`で指定する方法)
+  ```py
+  fig, ax = plt.subplots(2, 2, figsize=(6, 4))
+
+  # 左上
+  ax[0, 0].plot(x, y1)
+
+  # 右上
+  ax[0, 1].plot(x, y2)
+
+  # 左下
+  ax[1, 0].plot(x, y3)
+
+  # 右下
+  ax[1, 1].plot(x, y4)
+  ```
+
+  ![](doc/img/plot_ex03.png)
+
+参考: https://qiita.com/tsuruokax/items/90167693f142ebb55a7d
+
 ### matplotlib.pyplotのメモ
 
 + `plt.ylim(-25, 25)` : y軸の表示範囲を制限する
