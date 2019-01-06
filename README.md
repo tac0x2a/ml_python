@@ -119,6 +119,17 @@ pd.scatter_matrix(cancer_df, c=y_train, figsize=(16,16), hist_kwds={'bins':40}, 
 
   ![](doc/img/plot_ex03.png)
 
+
++ `ravel()`で一次元のインデックスでアクセスできる
+  ```py
+  fig, axes = plt.subplots(2, 2, figsize=(6, 4))
+  ax = axes.ravel()  # 1次元でアクセスできる
+
+  for i in range(len(ax)):
+      ax[i].plot(x,y)
+  ```
+  ![](doc/img/plot_ex04.png)
+
 参考: https://qiita.com/tsuruokax/items/90167693f142ebb55a7d
 
 ### matplotlib.pyplotのメモ

@@ -102,3 +102,13 @@ ax[1, 0].plot(x, y)
 ax[1, 1].plot(x, y)
 
 plt.savefig('doc/img/plot_ex03.png')
+
+#%%
+fig, axes = plt.subplots(2, 2, figsize=(6, 4))
+
+ax = axes.ravel()  # 1次元でアクセスできる
+
+for i in range(len(ax)):
+    ax[i].plot(x, y)
+
+plt.savefig('doc/img/plot_ex04.png')
