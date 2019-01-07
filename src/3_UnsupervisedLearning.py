@@ -1,3 +1,4 @@
+
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
@@ -95,7 +96,61 @@ plt.yticks(range(2), ["First", "Second"])
 # plt.savefig("doc/img/pca_heatmap.png")
 
 
-#%%
+#%% 固有顔による特徴量抽出 ----------------------------------------------------------
+from sklearn.datasets import fetch_lfw_people
+people = fetch_lfw_people(min_faces_per_person=20, resize=.7)
+image_shape = people.images[0].shape  # (87, 65)
 
+print(image_shape)
+
+fig, axes = plt.subplots(2, 5, figsize=(15, 8))
+for name, image, ax in zip(people.target_names, people.images, axes.ravel()):
+    ax.imshow(image)
+    ax.set_title(name)
+
+#%% データカウント
+for name, cnt in zip(people.target_names, np.bincount(people.target)):
+    print("{}:{}".format(name, cnt))
+
+#%% 同じ人ばっかり出てこないように50枚づつピックアップする
+mask = np.zeros(people.target.shape, dtype=np.bool)
+
+for id in np.unique(people.target):
+    target_indexes = np.where(people.target == id)
+    mask[np.where(people.target == id)[0][:50]] = 1
+
+X_people = people.data[mask]
+y_people = people.target[mask]
+
+X_people /= 255.0  # 0から1の実数に変換．数値的に安定(?)するらしい
+
+#%%
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X_people, y_people)
+
+#%% 元データで訓練・評価
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=1).fit(X_train, y_train)
+knn.score(X_test, y_test)  # 0.238
+
+
+#%% PCAの主成分で訓練・評価
+pca = PCA(n_components=100, whiten=True).fit(X_train)
+X_train_pca = pca.transform(X_train)
+X_test_pca = pca.transform(X_test)
+
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=1).fit(X_train_pca, y_train)
+knn.score(X_test_pca, y_test)  # 0.329
+
+#%% 主成分を可視化してみる
+image_shape = people.images[0].shape
+
+fig, axies = plt.subplots(2, 5, figsize=(15, 8))
+for idx, (data, ax) in enumerate(zip(pca.components_, axies.ravel())):
+    ax.imshow(data.reshape(image_shape))
+    ax.set_title(idx)
+
+fig.savefig("doc/img/face_pca.png")
 
 #%%
